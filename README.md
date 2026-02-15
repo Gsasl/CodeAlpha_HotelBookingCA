@@ -34,13 +34,7 @@ To maintain strict privacy, users searching for reservations outside their own d
 ### 5. Client-Side Receipt Synthesis
 Bypasses the need for a backend filesystem by generating `.txt` receipts entirely within the browser. It creates a Data URI string and programmatically triggers an invisible HTML `<a>` tag to force a secure local download.
 
----
-
-## 📁 Project Structure (Modular Separation)
-
-The codebase strictly adheres to the Separation of Concerns principle:
-
-
+```text
 /CodeAlpha_HotelBookingCA
 │
 ├── index.html       # The structural skeleton and Gatekeeper UI.
