@@ -1,4 +1,4 @@
-                                                                                   CodeAlpha_HotelBookingCA
+  CodeAlpha_HotelBookingCA
 Serverless Booking Architecture
 Core java programming logic was developed firsthand. generative AI was used for javascript and html formatting. Easy translation of used OOP concepts will make understanding structure easier.
 This is a basic demo version cereated using Firebase.
