@@ -3,219 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel CA - Cloud Secure</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        #login-screen { text-align: center; margin-top: 100px; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin-left: auto; margin-right: auto; }
-        h1, h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .tabs { display: flex; cursor: pointer; margin-bottom: 20px; background: #ecf0f1; border-radius: 5px; overflow: hidden; }
-        .tab { flex: 1; padding: 15px; text-align: center; font-weight: bold; transition: 0.3s; }
-        .tab:hover { background: #d5dbdb; }
-        .tab.active { background: #3498db; color: white; }
-        .section { display: none; }
-        .section.active { display: block; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { background-color: #3498db; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-size: 16px; width: 100%; margin-top: 10px;}
-        button:hover { background-color: #2980b9; }
-        .login-btn { background-color: #db4437; font-weight: bold; }
-        .logout-btn { background-color: #7f8c8d; width: auto; float: right; padding: 5px 15px; font-size: 14px; }
-        .receipt { background: #1e1e1e; color: #00ff00; font-family: monospace; padding: 20px; border-radius: 5px; white-space: pre-wrap; margin-top: 20px;}
-        #status-indicator { text-align: center; color: #27ae60; font-weight: bold; margin-bottom: 15px; }
-    </style>
+    <title>Hotel CA - Secure Booking</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="login-screen">
     <h1>Hotel CA</h1>
-    <p>Mandatory Sign-In Required</p>
+    <p>Please sign in with your Google account to manage bookings.</p>
     <button class="login-btn" id="googleLoginBtn">Sign in with Google</button>
 </div>
 
-<div id="app-content" class="container" style="display: none;">
-    <button class="logout-btn" id="googleLogoutBtn">Logout</button>
-    <h1>Hotel CA Booking System</h1>
-    <div id="status-indicator">🟢 Connected as Guest</div>
-    
-    <div class="tabs">
-        <div class="tab active" id="tab-book">Book a Room</div>
-        <div class="tab" id="tab-manage">Manage Reservation</div>
-        <div class="tab" id="tab-policies">Fares & Policies</div>
-    </div>
-
-    <div id="book" class="section active">
-        <div class="form-group"><label>Check-In Date:</label><input type="date" id="checkIn"></div>
-        <div class="form-group"><label>Check-Out Date:</label><input type="date" id="checkOut"></div>
-        <div class="form-group">
-            <label>Room Type:</label>
-            <select id="roomType">
-                <option value="Standard">Standard - 50 USD</option>
-                <option value="Deluxe">Deluxe - 100 USD</option>
-                <option value="Suite">Suite - 200 USD</option>
-            </select>
+<div id="app-content" style="display: none;">
+    <div class="container">
+        <button class="logout-btn" id="googleLogoutBtn">Logout</button>
+        <h1>Hotel CA Booking System</h1>
+        <div id="status-indicator">🟢 Connected</div>
+        
+        <div class="tabs">
+            <div class="tab active" id="tab-book">Book a Room</div>
+            <div class="tab" id="tab-manage">Manage Reservation</div>
+            <div class="tab" id="tab-policies">Policies</div>
         </div>
-        <div class="form-group"><label>Available Floors:</label><select id="desiredFloor"><option value="">Select dates...</option></select></div>
-        <div class="form-group"><label>Full Name:</label><input type="text" id="guestName" readonly></div>
-        <div class="form-group"><label>Email Address:</label><input type="email" id="email" readonly></div>
-        <div class="form-group"><label>Contact Number:</label><input type="text" id="contact" placeholder="555-0192"></div>
-        <div class="form-group">
-            <label>Payment Method:</label>
-            <select id="paymentMethod">
-                <option value="Card">Credit Card (USD)</option>
-                <option value="MFS">MFS (BDT + 1% Fee)</option>
-            </select>
+
+        <div id="book" class="section active">
+            <div class="form-group"><label>Check-In:</label><input type="date" id="checkIn"></div>
+            <div class="form-group"><label>Check-Out:</label><input type="date" id="checkOut"></div>
+            <div class="form-group">
+                <label>Room Type:</label>
+                <select id="roomType">
+                    <option value="Standard">Standard - 50 USD</option>
+                    <option value="Deluxe">Deluxe - 100 USD</option>
+                    <option value="Suite">Suite - 200 USD</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Available Floors:</label><select id="desiredFloor"><option value="">Select dates...</option></select></div>
+            <div class="form-group"><label>Full Name:</label><input type="text" id="guestName" readonly></div>
+            <div class="form-group"><label>Email Address:</label><input type="email" id="email" readonly></div>
+            <div class="form-group"><label>Contact:</label><input type="text" id="contact" placeholder="555-0192"></div>
+            <button id="bookBtn">Confirm Booking & Download Receipt</button>
+            <div id="bookingOutput"></div>
         </div>
-        <button id="bookBtn">Confirm Booking & Download Receipt</button>
-        <div id="bookingOutput"></div>
-    </div>
 
-    <div id="manage" class="section">
-        <div class="form-group"><label>Reference Number:</label><input type="text" id="searchRef"></div>
-        <button id="searchBtn">Search Reservation</button>
-        <div id="manageOutput"></div>
-    </div>
+        <div id="manage" class="section">
+            <div class="form-group"><label>Ref Number:</label><input type="text" id="searchRef"></div>
+            <button id="searchBtn">Search My Reservations</button>
+            <div id="manageOutput"></div>
+        </div>
 
-    <div id="policies" class="section">
-        <h2>Policies</h2>
-        <p>Check-in: 12:30 PM | Check-out: 11:30 AM</p>
-        <p>OAuth Security: Only the owner of a booking can view or cancel it.</p>
+        <div id="policies" class="section">
+            <h2>Security Policy</h2>
+            <p>Access is restricted to authenticated users. Your data is protected via Google OAuth.</p>
+        </div>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCfKIYABJTbLnp7FWp_LKMf6m-rtc2fslw",
-      authDomain: "hotel-ca.firebaseapp.com",
-      projectId: "hotel-ca",
-      storageBucket: "hotel-ca.firebasestorage.app",
-      messagingSenderId: "540055595631",
-      appId: "1:540055595631:web:27bbf0936ee4ff89a6fb9a"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    let bookings = [];
-    let currentUser = null;
-
-    // --- AUTHENTICATION GATEKEEPER ---
-    onAuthStateChanged(auth, (user) => {
-        const loginScreen = document.getElementById('login-screen');
-        const appContent = document.getElementById('app-content');
-        if (user) {
-            currentUser = user;
-            loginScreen.style.display = 'none';
-            appContent.style.display = 'block';
-            document.getElementById('status-indicator').innerText = `🟢 Connected as ${user.displayName}`;
-            document.getElementById('guestName').value = user.displayName;
-            document.getElementById('email').value = user.email;
-            listenToBookings();
-        } else {
-            currentUser = null;
-            loginScreen.style.display = 'block';
-            appContent.style.display = 'none';
-        }
-    });
-
-    document.getElementById('googleLoginBtn').onclick = () => signInWithPopup(auth, provider);
-    document.getElementById('googleLogoutBtn').onclick = () => signOut(auth);
-
-    // --- LIVE DB SYNC (Restricted to logged-in user) ---
-    function listenToBookings() {
-        // Query only bookings belonging to this UID for privacy
-        const q = query(collection(db, "bookings"), where("userId", "==", currentUser.uid));
-        onSnapshot(q, (snapshot) => {
-            bookings = [];
-            snapshot.forEach((doc) => {
-                let data = doc.data();
-                data.dbId = doc.id;
-                bookings.push(data);
-            });
-            updateFloorDropdown();
-        });
-    }
-
-    // --- HOTEL LOGIC ---
-    let rooms = [];
-    for (let f = 1; f <= 10; f++) { for(let r = 1; r <= 10; r++) rooms.push({roomNo: f*100+r, type: "Standard", price: 50}); }
-    for (let f = 11; f <= 20; f++) { for(let r = 1; r <= 10; r++) rooms.push({roomNo: f*100+r, type: "Deluxe", price: 100}); }
-    for (let f = 21; f <= 25; f++) { for(let r = 1; r <= 10; r++) rooms.push({roomNo: f*100+r, type: "Suite", price: 200}); }
-
-    const checkInEl = document.getElementById('checkIn');
-    const checkOutEl = document.getElementById('checkOut');
-    checkInEl.addEventListener('change', updateFloorDropdown);
-    checkOutEl.addEventListener('change', updateFloorDropdown);
-    document.getElementById('roomType').addEventListener('change', updateFloorDropdown);
-
-    function updateFloorDropdown() {
-        const type = document.getElementById('roomType').value;
-        const floorSelect = document.getElementById('desiredFloor');
-        floorSelect.innerHTML = '';
-        const floors = [...new Set(rooms.filter(r => r.type === type).map(r => Math.floor(r.roomNo / 100)))].sort((a,b)=>a-b);
-        floors.forEach(f => {
-            let opt = document.createElement('option');
-            opt.value = f; opt.text = `Floor ${f}`;
-            floorSelect.add(opt);
-        });
-    }
-
-    function triggerDownload(filename, text) {
-        let element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        element.setAttribute('download', filename);
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    }
-
-    document.getElementById('bookBtn').onclick = async function() {
-        const btn = this;
-        btn.disabled = true;
-        btn.innerText = "Securing Cloud Reservation...";
-        
-        try {
-            const refNo = Math.random().toString(36).substr(2, 8).toUpperCase();
-            const receiptText = `BOOKING RECEIPT\nRef: ${refNo}\nGuest: ${currentUser.displayName}\nEmail: ${currentUser.email}`;
-
-            await addDoc(collection(db, "bookings"), {
-                userId: currentUser.uid,
-                ref: refNo,
-                name: currentUser.displayName,
-                email: currentUser.email,
-                checkIn: checkInEl.value,
-                checkOut: checkOutEl.value,
-                timestamp: new Date()
-            });
-
-            document.getElementById('bookingOutput').innerHTML = `<div class="receipt">${receiptText}</div>`;
-            triggerDownload(`Receipt_${refNo}.txt`, receiptText);
-        } catch (e) {
-            alert("Database Error: " + e.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "Confirm Booking & Download Receipt";
-        }
-    };
-
-    // Tab Logic
-    window.showTab = function(tabId) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
-    };
-    document.getElementById('tab-book').onclick = () => showTab('book');
-    document.getElementById('tab-manage').onclick = () => showTab('manage');
-    document.getElementById('tab-policies').onclick = () => showTab('policies');
-</script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
