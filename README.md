@@ -1,15 +1,63 @@
-                        CodeAlpha_HotelBookingCA
+                                                   CodeAlpha_HotelBookingCA
+
+                                                   
+https://gsasl.github.io/CodeAlpha_HotelBookingCA/
+
+---
+
+Technical Architecture
+
+This application is built on a **Serverless / Backend-as-a-Service (BaaS)** architecture. By completely decoupling the frontend from a traditional server, the application achieves zero-latency UI updates and infinite frontend scalability.
+
+* Frontend: Vanilla JavaScript (ES6), HTML5, CSS3. (No bulky frameworks; demonstrates a deep understanding of DOM manipulation and state management).
+* Authentication: Google Firebase Auth (OAuth 2.0).
+* Database: Google Firebase Firestore (NoSQL, Real-time WebSockets).
+* Hosting: GitHub Pages (Global CDN).
+
+---
+
+CRUD Capabilities
+
+### 1. The "Gatekeeper" Authentication (Read)
+The entire application is locked behind a mandatory Google Sign-In wall. Utilizing Firebase's `onAuthStateChanged` observer, the UI seamlessly transitions between the login screen and the secure portal, automatically fetching the user's secure Google profile data.
+
+### 2. Algorithmic Overlap Detection (Create)
+To prevent double-booking without making expensive database round-trips, the system downloads active bookings via a WebSocket `onSnapshot` listener. A custom JavaScript algorithm maps requested dates to epoch timestamps and cross-references them against existing database entries to proactively lock out unavailable floors.
+
+### 3. Dynamic Pricing & Rescheduling (Update)
+Features a localized pricing engine that calculates total fares based on weekday discounts (10%), weekend surcharges (13%), and static holiday peak rates (21%). 
+* **Reschedule Penalty:** Users can alter their dates dynamically. The JavaScript engine calculates the new room rate and automatically applies a **5% penalty fee** based on the original booking total before updating the Firestore document.
+
+### 4. Dual-Auth Reservation Search (Read)
+To maintain strict privacy, users searching for reservations outside their own dashboard must provide a dual-match: the exact **Reference Number** AND the **Email Address** used to book the room.
+
+### 5. Client-Side Receipt Synthesis
+Bypasses the need for a backend filesystem by generating `.txt` receipts entirely within the browser. It creates a Data URI string and programmatically triggers an invisible HTML `<a>` tag to force a secure local download.
+
+---
+
+## 📁 Project Structure (Modular Separation)
+
+The codebase strictly adheres to the Separation of Concerns principle:
+
+
+/CodeAlpha_HotelBookingCA
+│
+├── index.html       # The structural skeleton and Gatekeeper UI.
+├── style.css        # Visual styling, flexbox layouts, and UI transitions.
+├── script.js        # The core logic, algorithms, and Firebase BaaS integration.
+└── README.md        # Technical documentation and evaluation guide.
 Serverless Booking Architecture
 Core java programming logic was developed firsthand. generative AI was used for javascript and html formatting. Easy translation of used OOP concepts will make understanding structure easier.
 This is a basic demo version cereated using Firebase.
 
 
-                                                                                        Overview
+                                                                                 Overview
 
 Hotel CA is a fully functional, serverless Single-Page Application (SPA) designed to handle real-time hotel reservations. Originally conceptualized as an Object-Oriented Java console application, this project has been fully translated into a modern, dependency-free web application. It utilizes **Vanilla JavaScript (ES6)** for client-side logic and **Firebase Firestore** as a NoSQL Backend-as-a-Service (BaaS), all deployed via GitHub (Pages).
 
 
-                                                                                Architecture & Design Choices
+                                                                      Architecture & Design Choices
 
 Serverless SPA Paradigm:
 Bypassed the traditional Node.js/Spring Boot backend to demonstrate mastery of BaaS integration. The browser handles all computational weight (pricing algorithms, overlap detection), drastically reducing server costs and latency.
