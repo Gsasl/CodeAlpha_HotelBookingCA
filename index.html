@@ -122,34 +122,14 @@
     import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } 
       from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // -------------------------------------------------------------
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCfKIYABJTbLnp7FWp_LKMf6m-rtc2fslw",
-    authDomain: "hotel-ca.firebaseapp.com",
-    projectId: "hotel-ca",
-    storageBucket: "hotel-ca.firebasestorage.app",
-    messagingSenderId: "540055595631",
-    appId: "1:540055595631:web:27bbf0936ee4ff89a6fb9a"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
-    // -------------------------------------------------------------
+    // Your actual Firebase Configuration
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyCfKIYABJTbLnp7FWp_LKMf6m-rtc2fslw",
+      authDomain: "hotel-ca.firebaseapp.com",
+      projectId: "hotel-ca",
+      storageBucket: "hotel-ca.firebasestorage.app",
+      messagingSenderId: "540055595631",
+      appId: "1:540055595631:web:27bbf0936ee4ff89a6fb9a"
     };
 
     // Initialize Firebase and Database
@@ -208,7 +188,7 @@
         return basePrice * 0.90; 
     }
 
-    // Process Booking (Now Async to talk to Database)
+    // Process Booking
     document.getElementById('bookBtn').onclick = async function() {
         let btn = document.getElementById('bookBtn');
         btn.innerText = "Processing Cloud Transaction...";
@@ -290,7 +270,7 @@
 
         receiptText += `========================================\n          HOTEL CA BOOKING RECEIPT      \n========================================\nGenerated   : ${timestamp}\nHotline     : Ext. 6621\n----------------------------------------\nBooking Ref : ${refNo}\nTxn ID      : ${txnId}\nGuest Name  : ${name}\nContact     : ${contact}\nEmail       : ${email}\nRoom No     : ${selectedRoom.roomNo} (${selectedRoom.type})\nCheck-In    : ${checkIn} (at 12:30 PM)\nCheck-Out   : ${checkOut} (by 11:30 AM)\nDuration    : ${nights} Night(s)\n----------------------------------------\nTotal Amount: ${totalFare.toFixed(2)} USD\nAmount Paid : ${amountToPayUSD.toFixed(2)} USD\nBalance Due : ${(totalFare - amountToPayUSD).toFixed(2)} USD\nStatus      : ${status}\n========================================\n      Thank you for choosing Hotel CA!  \n========================================`;
 
-        // 👉 SEND DATA TO FIREBASE CLOUD
+        // SEND DATA TO FIREBASE CLOUD
         try {
             await addDoc(collection(db, "bookings"), {
                 ref: refNo, txnId: txnId, name: name, contact: contact, email: email, 
@@ -343,7 +323,7 @@
                 cancelBtn.disabled = true;
                 
                 try {
-                    // 👉 DELETE DATA FROM FIREBASE CLOUD
+                    // DELETE DATA FROM FIREBASE CLOUD
                     await deleteDoc(doc(db, "bookings", b.dbId));
                     output.innerHTML = `<p style="color:green;">Booking ${b.ref} has been permanently deleted from the Cloud.</p>`;
                 } catch(e) {
