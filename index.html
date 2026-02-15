@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel CA Booking System (Live)</title>
+    <title>Hotel CA - Cloud Secure</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        #login-screen { text-align: center; margin-top: 100px; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin-left: auto; margin-right: auto; }
         h1, h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
         .tabs { display: flex; cursor: pointer; margin-bottom: 20px; background: #ecf0f1; border-radius: 5px; overflow: hidden; }
         .tab { flex: 1; padding: 15px; text-align: center; font-weight: bold; transition: 0.3s; }
@@ -19,18 +20,24 @@
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         button { background-color: #3498db; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-size: 16px; width: 100%; margin-top: 10px;}
         button:hover { background-color: #2980b9; }
-        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        .login-btn { background-color: #db4437; font-weight: bold; }
+        .logout-btn { background-color: #7f8c8d; width: auto; float: right; padding: 5px 15px; font-size: 14px; }
         .receipt { background: #1e1e1e; color: #00ff00; font-family: monospace; padding: 20px; border-radius: 5px; white-space: pre-wrap; margin-top: 20px;}
-        .danger-btn { background-color: #e74c3c; }
-        .danger-btn:hover { background-color: #c0392b; }
         #status-indicator { text-align: center; color: #27ae60; font-weight: bold; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div id="login-screen">
+    <h1>Hotel CA</h1>
+    <p>Mandatory Sign-In Required</p>
+    <button class="login-btn" id="googleLoginBtn">Sign in with Google</button>
+</div>
+
+<div id="app-content" class="container" style="display: none;">
+    <button class="logout-btn" id="googleLogoutBtn">Logout</button>
     <h1>Hotel CA Booking System</h1>
-    <div id="status-indicator">🔴 Disconnected from Database...</div>
+    <div id="status-indicator">🟢 Connected as Guest</div>
     
     <div class="tabs">
         <div class="tab active" id="tab-book">Book a Room</div>
@@ -39,92 +46,49 @@
     </div>
 
     <div id="book" class="section active">
-        <div class="form-group">
-            <label>Check-In Date:</label>
-            <input type="date" id="checkIn">
-        </div>
-        <div class="form-group">
-            <label>Check-Out Date:</label>
-            <input type="date" id="checkOut">
-        </div>
+        <div class="form-group"><label>Check-In Date:</label><input type="date" id="checkIn"></div>
+        <div class="form-group"><label>Check-Out Date:</label><input type="date" id="checkOut"></div>
         <div class="form-group">
             <label>Room Type:</label>
             <select id="roomType">
-                <option value="Standard">Standard (Floors 1-10) - 50 USD</option>
-                <option value="Deluxe">Deluxe (Floors 11-20) - 100 USD</option>
-                <option value="Suite">Suite (Floors 21-25) - 200 USD</option>
+                <option value="Standard">Standard - 50 USD</option>
+                <option value="Deluxe">Deluxe - 100 USD</option>
+                <option value="Suite">Suite - 200 USD</option>
             </select>
         </div>
-        <div class="form-group">
-            <label>Available Floors:</label>
-            <select id="desiredFloor">
-                <option value="">Select dates first...</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Full Name:</label>
-            <input type="text" id="guestName" placeholder="John Doe">
-        </div>
-        <div class="form-group">
-            <label>Contact Number:</label>
-            <input type="text" id="contact" placeholder="555-0192">
-        </div>
-        <div class="form-group">
-            <label>Email Address:</label>
-            <input type="email" id="email" placeholder="john@example.com">
-        </div>
-        <div class="form-group">
-            <label>Payment Plan:</label>
-            <select id="paymentPlan">
-                <option value="Full">Pay Full Amount Now</option>
-                <option value="Fee">Pay Later (11% Booking Fee Required Now)</option>
-            </select>
-        </div>
+        <div class="form-group"><label>Available Floors:</label><select id="desiredFloor"><option value="">Select dates...</option></select></div>
+        <div class="form-group"><label>Full Name:</label><input type="text" id="guestName" readonly></div>
+        <div class="form-group"><label>Email Address:</label><input type="email" id="email" readonly></div>
+        <div class="form-group"><label>Contact Number:</label><input type="text" id="contact" placeholder="555-0192"></div>
         <div class="form-group">
             <label>Payment Method:</label>
             <select id="paymentMethod">
                 <option value="Card">Credit Card (USD)</option>
-                <option value="MFS">Mobile Financial Service (MFS - BDT + 1% Fee)</option>
+                <option value="MFS">MFS (BDT + 1% Fee)</option>
             </select>
         </div>
-        <button id="bookBtn">Calculate & Confirm Booking</button>
+        <button id="bookBtn">Confirm Booking & Download Receipt</button>
         <div id="bookingOutput"></div>
     </div>
 
     <div id="manage" class="section">
-        <div class="form-group">
-            <label>Enter Booking Reference Number:</label>
-            <input type="text" id="searchRef" placeholder="e.g. 519D6D7C">
-        </div>
+        <div class="form-group"><label>Reference Number:</label><input type="text" id="searchRef"></div>
         <button id="searchBtn">Search Reservation</button>
-        <div id="manageOutput" style="margin-top: 20px;"></div>
+        <div id="manageOutput"></div>
     </div>
 
     <div id="policies" class="section">
-        <h2>Property Policies</h2>
-        <p><strong>Check-in:</strong> From 12:30 PM<br>
-        <strong>Check-out:</strong> Until 11:30 AM<br>
-        <strong>Pets:</strong> Pets are allowed. No extra charges.</p>
-        
-        <h2>Dynamic Pricing Rules</h2>
-        <ul>
-            <li>Weekdays (Mon-Thu): 10% Discount applied</li>
-            <li>Weekends (Fri-Sun): 13% Surcharge applied</li>
-            <li>Holidays: 21% Surcharge applied</li>
-        </ul>
-
-        <h2>Cancellation & Prepayment Policy</h2>
-        <p>Cancellation and prepayment policies vary according to accommodation type. If cancelled up to 1 week (7 days) before the date of arrival, a 13% fee of the total fund will be charged. If cancelled later, a 3% charge is applicable for refund processing.</p>
+        <h2>Policies</h2>
+        <p>Check-in: 12:30 PM | Check-out: 11:30 AM</p>
+        <p>OAuth Security: Only the owner of a booking can view or cancel it.</p>
     </div>
 </div>
 
 <script type="module">
-    // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } 
-      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Your actual Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCfKIYABJTbLnp7FWp_LKMf6m-rtc2fslw",
       authDomain: "hotel-ca.firebaseapp.com",
@@ -134,129 +98,75 @@
       appId: "1:540055595631:web:27bbf0936ee4ff89a6fb9a"
     };
 
-    // Initialize Firebase and Database
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
     let bookings = [];
-    
-    // Setup Date Restrictions
-    const todayStr = new Date().toISOString().split('T')[0];
-    const checkInEl = document.getElementById('checkIn');
-    const checkOutEl = document.getElementById('checkOut');
-    
-    // Prevent past dates
-    checkInEl.min = todayStr;
-    checkOutEl.min = todayStr;
+    let currentUser = null;
 
-    // Dynamic UI Listeners
-    checkInEl.addEventListener('change', () => {
-        checkOutEl.min = checkInEl.value; // Checkout cannot be before checkin
-        if(checkOutEl.value < checkInEl.value) {
-            checkOutEl.value = checkInEl.value;
+    // --- AUTHENTICATION GATEKEEPER ---
+    onAuthStateChanged(auth, (user) => {
+        const loginScreen = document.getElementById('login-screen');
+        const appContent = document.getElementById('app-content');
+        if (user) {
+            currentUser = user;
+            loginScreen.style.display = 'none';
+            appContent.style.display = 'block';
+            document.getElementById('status-indicator').innerText = `🟢 Connected as ${user.displayName}`;
+            document.getElementById('guestName').value = user.displayName;
+            document.getElementById('email').value = user.email;
+            listenToBookings();
+        } else {
+            currentUser = null;
+            loginScreen.style.display = 'block';
+            appContent.style.display = 'none';
         }
-        updateFloorDropdown();
     });
-    checkOutEl.addEventListener('change', updateFloorDropdown);
-    document.getElementById('roomType').addEventListener('change', updateFloorDropdown);
 
-    // Live Database Sync
-    onSnapshot(collection(db, "bookings"), (snapshot) => {
-        bookings = [];
-        snapshot.forEach((doc) => {
-            let data = doc.data();
-            data.dbId = doc.id; 
-            bookings.push(data);
+    document.getElementById('googleLoginBtn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('googleLogoutBtn').onclick = () => signOut(auth);
+
+    // --- LIVE DB SYNC (Restricted to logged-in user) ---
+    function listenToBookings() {
+        // Query only bookings belonging to this UID for privacy
+        const q = query(collection(db, "bookings"), where("userId", "==", currentUser.uid));
+        onSnapshot(q, (snapshot) => {
+            bookings = [];
+            snapshot.forEach((doc) => {
+                let data = doc.data();
+                data.dbId = doc.id;
+                bookings.push(data);
+            });
+            updateFloorDropdown();
         });
-        document.getElementById('status-indicator').innerHTML = "🟢 Live: Connected to Cloud Database";
-        updateFloorDropdown(); 
-    });
+    }
 
-    // Hotel Setup
+    // --- HOTEL LOGIC ---
     let rooms = [];
     for (let f = 1; f <= 10; f++) { for(let r = 1; r <= 10; r++) rooms.push({roomNo: f*100+r, type: "Standard", price: 50}); }
     for (let f = 11; f <= 20; f++) { for(let r = 1; r <= 10; r++) rooms.push({roomNo: f*100+r, type: "Deluxe", price: 100}); }
     for (let f = 21; f <= 25; f++) { for(let r = 1; r <= 10; r++) rooms.push({roomNo: f*100+r, type: "Suite", price: 200}); }
-    const holidays = ["01-01", "02-14", "05-01", "12-25", "12-31"]; 
 
-    // Tab Logic
-    window.showTab = function(tabId) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
-    };
-    document.getElementById('tab-book').onclick = () => showTab('book');
-    document.getElementById('tab-manage').onclick = () => showTab('manage');
-    document.getElementById('tab-policies').onclick = () => showTab('policies');
-
-    function getDatesInRange(startStr, endStr) {
-        let dates = [];
-        let curr = new Date(startStr);
-        let end = new Date(endStr);
-        if (curr.getTime() === end.getTime()) {
-            dates.push(curr.getTime()); 
-            return dates;
-        }
-        while (curr < end) {
-            dates.push(curr.getTime());
-            curr.setDate(curr.getDate() + 1);
-        }
-        return dates;
-    }
-
-    function isRoomAvailable(roomNo, checkIn, checkOut) {
-        let requestedDates = getDatesInRange(checkIn, checkOut);
-        for (let b of bookings) {
-            if (b.roomNo === roomNo) {
-                let bookedDates = getDatesInRange(b.checkIn, b.checkOut);
-                let overlap = requestedDates.some(rd => bookedDates.includes(rd));
-                if (overlap) return false; 
-            }
-        }
-        return true;
-    }
-
-    function calculateAdjustedPrice(basePrice, date) {
-        let d = new Date(date);
-        let mmdd = ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
-        if (holidays.includes(mmdd)) return basePrice * 1.21; 
-        let day = d.getDay();
-        if (day === 5 || day === 6 || day === 0) return basePrice * 1.13; 
-        return basePrice * 0.90; 
-    }
+    const checkInEl = document.getElementById('checkIn');
+    const checkOutEl = document.getElementById('checkOut');
+    checkInEl.addEventListener('change', updateFloorDropdown);
+    checkOutEl.addEventListener('change', updateFloorDropdown);
+    document.getElementById('roomType').addEventListener('change', updateFloorDropdown);
 
     function updateFloorDropdown() {
-        const cIn = checkInEl.value;
-        const cOut = checkOutEl.value;
         const type = document.getElementById('roomType').value;
         const floorSelect = document.getElementById('desiredFloor');
-        
-        floorSelect.innerHTML = ''; 
-
-        if (!cIn || !cOut) {
-            floorSelect.innerHTML = '<option value="">Select dates first...</option>';
-            return;
-        }
-
-        let availableRooms = rooms.filter(r => r.type === type && isRoomAvailable(r.roomNo, cIn, cOut));
-        
-        if (availableRooms.length === 0) {
-            floorSelect.innerHTML = '<option value="">No floors available</option>';
-            return;
-        }
-
-        let floors = [...new Set(availableRooms.map(r => Math.floor(r.roomNo / 100)))].sort((a,b)=>a-b);
-        
+        floorSelect.innerHTML = '';
+        const floors = [...new Set(rooms.filter(r => r.type === type).map(r => Math.floor(r.roomNo / 100)))].sort((a,b)=>a-b);
         floors.forEach(f => {
             let opt = document.createElement('option');
-            opt.value = f;
-            opt.text = `Floor ${f}`;
+            opt.value = f; opt.text = `Floor ${f}`;
             floorSelect.add(opt);
         });
     }
 
-    // AUTOMATIC TEXT DOWNLOAD LOGIC
     function triggerDownload(filename, text) {
         let element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -268,155 +178,44 @@
     }
 
     document.getElementById('bookBtn').onclick = async function() {
-        let btn = document.getElementById('bookBtn');
-        let output = document.getElementById('bookingOutput');
-        
-        btn.innerText = "Processing Cloud Transaction...";
+        const btn = this;
         btn.disabled = true;
-        output.innerHTML = ""; 
-
-        try {
-            let checkIn = document.getElementById('checkIn').value;
-            let checkOut = document.getElementById('checkOut').value;
-            let type = document.getElementById('roomType').value;
-            let desiredFloor = parseInt(document.getElementById('desiredFloor').value);
-            let name = document.getElementById('guestName').value;
-            let contact = document.getElementById('contact').value;
-            let email = document.getElementById('email').value;
-            let plan = document.getElementById('paymentPlan').value;
-            let method = document.getElementById('paymentMethod').value;
-
-            if (!checkIn || !checkOut || !name || !email || isNaN(desiredFloor)) {
-                output.innerHTML = "<p style='color:red;'>Error: Please fill in all required fields.</p>";
-                return; 
-            }
-
-            let inDate = new Date(checkIn);
-            let outDate = new Date(checkOut);
-            let today = new Date(); today.setHours(0,0,0,0);
-
-            if (inDate < today) {
-                output.innerHTML = "<p style='color:red;'>Error: Cannot book a date in the past.</p>";
-                return;
-            }
-            if (outDate < inDate) {
-                output.innerHTML = "<p style='color:red;'>Error: Check-out date is invalid.</p>";
-                return;
-            }
-
-            let available = rooms.filter(r => r.type === type && isRoomAvailable(r.roomNo, checkIn, checkOut));
-            let floorRooms = available.filter(r => Math.floor(r.roomNo / 100) === desiredFloor);
-            
-            if(floorRooms.length === 0) {
-                output.innerHTML = "<p style='color:red;'>Error: Selected floor is no longer available.</p>";
-                return;
-            }
-            
-            let selectedRoom = floorRooms[Math.floor(Math.random() * floorRooms.length)];
-
-            let totalFare = 0;
-            let current = new Date(inDate);
-            let nights = 0;
-            
-            if (inDate.getTime() === outDate.getTime()) {
-                totalFare += calculateAdjustedPrice(selectedRoom.price, current);
-                nights = 1; 
-            } else {
-                while(current < outDate) {
-                    totalFare += calculateAdjustedPrice(selectedRoom.price, current);
-                    current.setDate(current.getDate() + 1);
-                    nights++;
-                }
-            }
-
-            let bookingFee = totalFare * 0.11;
-            let amountToPayUSD = (plan === "Full") ? totalFare : bookingFee;
-            let status = (plan === "Full") ? "Paid in Full" : "Balance Due";
-
-            let refNo = Math.random().toString(36).substr(2, 8).toUpperCase();
-            let txnId = "TXN-" + refNo + "-" + Math.floor(1000 + Math.random() * 9000);
-            let timestamp = new Date().toLocaleString();
-
-            let receiptText = "";
-            if (method === "Card") {
-                receiptText += `>>> Simulated redirect to Card Processor...\n>>> Payment of ${amountToPayUSD.toFixed(2)} USD confirmed!\n\n`;
-            } else {
-                let rate = 119.50 + (Math.random() * 2.50);
-                let bdt = amountToPayUSD * rate;
-                let fee = bdt * 0.01;
-                let totalBdt = bdt + fee;
-                receiptText += `>>> Exchange Rate: 1 USD = ${rate.toFixed(2)} BDT\n>>> MFS Fee (1%): ${fee.toFixed(2)} BDT\n>>> Simulated redirect to MFS Processor...\n>>> Payment of ${totalBdt.toFixed(2)} BDT confirmed!\n\n`;
-            }
-
-            receiptText += `========================================\n          HOTEL CA BOOKING RECEIPT      \n========================================\nGenerated   : ${timestamp}\nHotline     : Ext. 6621\n----------------------------------------\nBooking Ref : ${refNo}\nTxn ID      : ${txnId}\nGuest Name  : ${name}\nContact     : ${contact}\nEmail       : ${email}\nRoom No     : ${selectedRoom.roomNo} (${selectedRoom.type})\nCheck-In    : ${checkIn} (at 12:30 PM)\nCheck-Out   : ${checkOut} (by 11:30 AM)\nDuration    : ${nights} Night(s)\n----------------------------------------\nTotal Amount: ${totalFare.toFixed(2)} USD\nAmount Paid : ${amountToPayUSD.toFixed(2)} USD\nBalance Due : ${(totalFare - amountToPayUSD).toFixed(2)} USD\nStatus      : ${status}\n========================================\n      Thank you for choosing Hotel CA!  \n========================================`;
-
-            // SEND DATA TO FIREBASE CLOUD
-            await addDoc(collection(db, "bookings"), {
-                ref: refNo, txnId: txnId, name: name, contact: contact, email: email, 
-                roomNo: selectedRoom.roomNo, type: selectedRoom.type, checkIn: checkIn, 
-                checkOut: checkOut, totalFare: totalFare, paid: amountToPayUSD, status: status
-            });
-            
-            output.innerHTML = `<div class="receipt">${receiptText}</div><p style="color:green; font-weight:bold;">⬇️ A copy of this receipt has been securely downloaded to your device.</p>`;
-            
-            // AUTOMATICALLY TRIGGER DOWNLOAD
-            triggerDownload("Receipt_" + refNo + ".txt", receiptText);
-
-            document.querySelectorAll('input').forEach(input => input.value = '');
-            updateFloorDropdown(); 
-
-        } catch (e) {
-            output.innerHTML = "<p style='color:red;'>Database Error: Connection issue.</p>";
-            console.error(e);
-        } finally {
-            btn.innerText = "Calculate & Confirm Booking";
-            btn.disabled = false;
-        }
-    };
-
-    // Search Reservation
-    document.getElementById('searchBtn').onclick = function() {
-        let ref = document.getElementById('searchRef').value.toUpperCase().trim();
-        let output = document.getElementById('manageOutput');
+        btn.innerText = "Securing Cloud Reservation...";
         
-        let b = bookings.find(x => x.ref === ref);
-        if (!b) {
-            output.innerHTML = "<p style='color:red;'>Reservation not found in Cloud Database.</p>";
-            return;
+        try {
+            const refNo = Math.random().toString(36).substr(2, 8).toUpperCase();
+            const receiptText = `BOOKING RECEIPT\nRef: ${refNo}\nGuest: ${currentUser.displayName}\nEmail: ${currentUser.email}`;
+
+            await addDoc(collection(db, "bookings"), {
+                userId: currentUser.uid,
+                ref: refNo,
+                name: currentUser.displayName,
+                email: currentUser.email,
+                checkIn: checkInEl.value,
+                checkOut: checkOutEl.value,
+                timestamp: new Date()
+            });
+
+            document.getElementById('bookingOutput').innerHTML = `<div class="receipt">${receiptText}</div>`;
+            triggerDownload(`Receipt_${refNo}.txt`, receiptText);
+        } catch (e) {
+            alert("Database Error: " + e.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Confirm Booking & Download Receipt";
         }
-
-        let due = b.totalFare - b.paid;
-        let html = `
-            <div style="background:#ecf0f1; padding: 15px; border-radius: 5px;">
-                <h3>Booking Ref: ${b.ref}</h3>
-                <p><strong>Name:</strong> ${b.name} | <strong>Email:</strong> ${b.email}</p>
-                <p><strong>Room:</strong> ${b.roomNo} (${b.type})</p>
-                <p><strong>Check-In:</strong> ${b.checkIn} | <strong>Check-Out:</strong> ${b.checkOut}</p>
-                <p><strong>Balance Due:</strong> ${due.toFixed(2)} USD</p>
-                <p style="font-size: 12px; color: #7f8c8d;">Note: Deleting this reservation will wipe it from the cloud database. You will need to manually delete your downloaded receipt file.</p>
-                <button class="danger-btn" id="cancelBtn">Cancel Reservation</button>
-            </div>
-        `;
-        output.innerHTML = html;
-
-        document.getElementById('cancelBtn').onclick = async function() {
-            if(confirm("Are you sure you want to cancel this booking?")) {
-                let cancelBtn = document.getElementById('cancelBtn');
-                cancelBtn.innerText = "Deleting...";
-                cancelBtn.disabled = true;
-                
-                try {
-                    await deleteDoc(doc(db, "bookings", b.dbId));
-                    output.innerHTML = `<p style="color:green;">Booking ${b.ref} has been permanently deleted from the Cloud.</p>`;
-                } catch(e) {
-                    output.innerHTML = `<p style="color:red;">Failed to delete from Cloud Database.</p>`;
-                    cancelBtn.innerText = "Cancel Reservation";
-                    cancelBtn.disabled = false;
-                }
-            }
-        };
     };
-</script>
 
+    // Tab Logic
+    window.showTab = function(tabId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
+    };
+    document.getElementById('tab-book').onclick = () => showTab('book');
+    document.getElementById('tab-manage').onclick = () => showTab('manage');
+    document.getElementById('tab-policies').onclick = () => showTab('policies');
+</script>
 </body>
 </html>
