@@ -44,9 +44,9 @@ Bypasses the need for a backend filesystem by generating `.txt` receipts entirel
 Serverless Booking Architecture
 Core java programming logic was developed firsthand. generative AI was used for javascript and html formatting. Easy translation of used OOP concepts will make understanding structure easier.
 This is a basic demo version cereated using Firebase.
+```
 
-
-                                                                                 Overview
+                                                                            Overview
 
 Hotel CA is a fully functional, serverless Single-Page Application (SPA) designed to handle real-time hotel reservations. Originally conceptualized as an Object-Oriented Java console application, this project has been fully translated into a modern, dependency-free web application. It utilizes **Vanilla JavaScript (ES6)** for client-side logic and **Firebase Firestore** as a NoSQL Backend-as-a-Service (BaaS), all deployed via GitHub (Pages).
 
