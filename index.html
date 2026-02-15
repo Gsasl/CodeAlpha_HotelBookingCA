@@ -18,11 +18,11 @@
     <div class="container">
         <button class="logout-btn" id="googleLogoutBtn">Logout</button>
         <h1>Hotel CA Booking System</h1>
-        <div id="status-indicator">🟢 Connected</div>
+        <div id="status-indicator">🔴 Connecting to Cloud...</div>
         
         <div class="tabs">
             <div class="tab active" id="tab-book">Book a Room</div>
-            <div class="tab" id="tab-manage">Manage Reservation</div>
+            <div class="tab" id="tab-manage">Manage Reservations</div>
             <div class="tab" id="tab-policies">Policies</div>
         </div>
 
@@ -32,9 +32,9 @@
             <div class="form-group">
                 <label>Room Type:</label>
                 <select id="roomType">
-                    <option value="Standard">Standard - 50 USD</option>
-                    <option value="Deluxe">Deluxe - 100 USD</option>
-                    <option value="Suite">Suite - 200 USD</option>
+                    <option value="Standard">Standard - 75 USD</option>
+                    <option value="Deluxe">Deluxe - 125 USD</option>
+                    <option value="Suite">Suite - 250 USD</option>
                 </select>
             </div>
             <div class="form-group"><label>Available Floors:</label><select id="desiredFloor"><option value="">Select dates...</option></select></div>
@@ -46,14 +46,25 @@
         </div>
 
         <div id="manage" class="section">
-            <div class="form-group"><label>Ref Number:</label><input type="text" id="searchRef"></div>
-            <button id="searchBtn">Search My Reservations</button>
-            <div id="manageOutput"></div>
+            <h2>My Reservations</h2>
+            <div id="myReservationsList">
+                </div>
+
+            <hr style="margin: 30px 0; border: 1px solid #bdc3c7;">
+
+            <h2>Find Another Reservation</h2>
+            <p style="font-size: 14px; color: #7f8c8d;">For security, you must provide the exact Reference Number and the Email address used for the booking.</p>
+            <div class="form-group"><label>Reference Number:</label><input type="text" id="searchRef" placeholder="e.g. 519D6D7C"></div>
+            <div class="form-group"><label>Email Used:</label><input type="email" id="searchEmail" placeholder="guest@example.com"></div>
+            <button id="searchBtn">Search Reservation</button>
+            <div id="manageOutput" style="margin-top: 15px;"></div>
         </div>
 
         <div id="policies" class="section">
-            <h2>Security Policy</h2>
-            <p>Access is restricted to authenticated users. Your data is protected via Google OAuth.</p>
+            <h2>Property Policies</h2>
+            <p>Check-in: 12:30 PM | Check-out: 11:30 AM</p>
+            <p><strong>Security:</strong> All transactions are locked to your Google UID for privacy.</p>
+            <p><strong>Rescheduling:</strong> Modifying dates incurs a 5% penalty fee based on the original booking total.</p>
         </div>
     </div>
 </div>
