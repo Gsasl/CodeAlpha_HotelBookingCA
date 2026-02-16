@@ -52,7 +52,7 @@ This is a basic demo version cereated using Firebase.
 Hotel CA is a fully functional, serverless Single-Page Application (SPA) designed to handle real-time hotel reservations. Originally conceptualized as an Object-Oriented Java console application, this project has been fully translated into a modern, dependency-free web application. It utilizes **Vanilla JavaScript (ES6)** for client-side logic and **Firebase Firestore** as a NoSQL Backend-as-a-Service (BaaS), all deployed via GitHub (Pages).
 
 
-                                                                      Architecture & Design Choices
+                                                                 Architecture & Design Choices
 
 Serverless SPA Paradigm:
 Bypassed the traditional Node.js/Spring Boot backend to demonstrate mastery of BaaS integration. The browser handles all computational weight (pricing algorithms, overlap detection), drastically reducing server costs and latency.
@@ -72,7 +72,7 @@ The application utilizes Firestore, a real-time NoSQL document database.
   * **Real-time Synchronization:** Utilizes Firestore's `onSnapshot` listener. This establishes a WebSocket connection that pushes database mutations to the client instantly, achieving    live multi-user concurrency without manual HTTP GET polling.
   * **Security & Scalability:** Integrated via modular CDN imports to keep the bundle size small. (Note: Firestore Security Rules manage access control).
 
-                                                         Core Algorithms & JavaScript Specifics
+                                          Core Algorithms & JavaScript Specifics
 This project relies heavily on ES6 features, including Promises, Async/Await, and Higher-Order Array Functions (`.map()`, `.filter()`, `.some()`, `.find()`).
 
  Date Overlap Detection (The Collision Engine):** To prevent double-booking, the `isRoomAvailable()` function converts date ranges into epoch timestamp arrays. It then uses the `Array.prototype.some()` method to check for intersections between the requested dates and the database's existing booking dates.
@@ -92,7 +92,7 @@ Client-Side File Generation: Bypasses the need for a server-side file stream by 
 
 Deployed securely via GitHub Pages. The repository acts as both the version control hub and the hosting environment, serving the static `index.html` file while the embedded Firebase SDK handles the external database routing.
 
-                                                                         Detailed Features & Technical Breakdown
+                                                          Detailed Features & Technical Breakdown
 1. Proactive Conflict Resolution (Smart UI)
 Instead of letting users submit a form and relying on the database to reject a double-booking, the app uses an overlapping date algorithm (isRoomAvailable) to proactively filter the UI. The desiredFloor dropdown physically will not render floors that lack vacancy for the chosen dates.
 
@@ -130,7 +130,7 @@ Small Boutique Hotels: Ideal for local properties with lower traffic that need a
 Developer Portfolios: An exceptional demonstration of integrating third-party APIs (BaaS), handling complex asynchronous JavaScript, and manipulating the DOM.
 
 
-                                                                               Known Flaws & Technical Limitations
+                                                                      Known Flaws & Technical Limitations
 
 
 Client-Side Trust Vulnerability: 
