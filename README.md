@@ -3,6 +3,13 @@
 CodeAlpha internship Cohort of January26
                                                    
 https://gsasl.github.io/CodeAlpha_HotelBookingCA/
+A small scale room booking system written in java translated into javascript and html based no server setup using nosqlFirebase
+Features 
+1. OAuth (google sign in)
+2. Book room (select dates and floor)
+3. Manage room reservation
+4. See policies
+5. Auto download receipt txt or retrieve online.
 
 ---
 
